@@ -1,5 +1,5 @@
 from layers.layer import Layer
-
+import os
 class ActivationFunction(Layer):
     def __init__(self):
         super().__init__()
@@ -17,7 +17,8 @@ class ReLUFunction(ActivationFunction):
         
     @staticmethod
     def load_svg():
-        svg_path = '/Users/adamkasperski/Documents/msc/minimal_example/relu.svg'
+        svg_path = os.path.join('..', 'assets', 'relu.svg')
+        # svg_path = '/Users/adamkasperski/Documents/msc/minimal_example/relu.svg'
         with open(svg_path, 'r') as svg_file:
             return svg_file.read()
     
@@ -45,7 +46,8 @@ class TanhFunction(ActivationFunction):
         
     @staticmethod
     def load_svg():
-        svg_path = '/Users/adamkasperski/Documents/msc/minimal_example/tanh.svg'
+        # svg_path = '/Users/adamkasperski/Documents/msc/minimal_example/tanh.svg'
+        svg_path = os.path.join('..', 'assets', 'tanh.svg')
         with open(svg_path, 'r') as svg_file:
             return svg_file.read()
     
@@ -70,7 +72,8 @@ class LeakyReLUFunction(ActivationFunction):
         
     @staticmethod
     def load_svg():
-        svg_path = '/Users/adamkasperski/Documents/msc/minimal_example/leaky_relu.svg'
+        svg_path = os.path.join('..', 'assets', 'leaky_relu.svg')
+        # svg_path = '/Users/adamkasperski/Documents/msc/minimal_example/leaky_relu.svg'
         with open(svg_path, 'r') as svg_file:
             return svg_file.read()
     

@@ -1,12 +1,12 @@
 from enum import Enum
 from layers.layer import Layer
-
+import os
 class PoolingType(Enum):
     MAX = "Max"
     AVG = "Avg"
 
 class PoolingLayer(Layer):
-    path = '/Users/adamkasperski/Documents/msc/minimal_example/drawing.svg'
+    path = os.path.join('..', 'assets', 'drawing.svg')
     def __init__(self, pooling_type: PoolingType):
         super().__init__()
         self.pooling_type = pooling_type
