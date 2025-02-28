@@ -1,0 +1,211 @@
+/* Base styles */
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: Arial, sans-serif;
+    line-height: 1.6;
+    color: #333;
+    background-color: #f4f4f4;
+}
+
+.container {
+    width: 100%;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+header {
+    margin-bottom: 20px;
+}
+
+h1, h2 {
+    margin-bottom: 10px;
+}
+
+/* Layout */
+.app-container {
+    display: flex;
+    gap: 20px;
+    height: calc(100vh - 120px);
+    min-height: 500px;
+}
+
+.sidebar {
+    width: 250px;
+    background-color: #fff;
+    border-radius: 5px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    padding: 15px;
+    display: flex;
+    flex-direction: column;
+}
+
+.main-content {
+    flex-grow: 1;
+    position: relative;
+    overflow: hidden;
+}
+
+/* Layer types panel */
+.layer-types {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-bottom: 20px;
+    flex-grow: 1;
+    overflow-y: auto;
+}
+
+.layer-type {
+    background-color: #e9ecef;
+    border-radius: 4px;
+    padding: 10px;
+    cursor: grab;
+    user-select: none;
+    text-align: center;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.layer-type:hover {
+    background-color: #dee2e6;
+}
+
+.layer-type:active {
+    cursor: grabbing;
+}
+
+/* Actions */
+.actions {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-top: auto;
+}
+
+.btn {
+    padding: 10px 15px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 14px;
+}
+
+.btn:hover {
+    background-color: #0069d9;
+}
+
+.btn:active {
+    background-color: #0062cc;
+}
+
+.btn.active {
+    background-color: #dc3545;
+}
+
+.btn.active:hover {
+    background-color: #c82333;
+}
+
+/* Drawing area */
+.drawing-area {
+    height: 100%;
+    background-color: #fff;
+    border-radius: 5px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    position: relative;
+    overflow: hidden;
+}
+
+
+/* Layer nodes */
+.layer-node {
+    position: absolute;
+    cursor: move;
+}
+
+.pooling-layer {
+    background-color: #34a853;
+}
+
+.layer-node.selected {
+    z-index: 10; /* Ensure selected node appears on top */
+  }
+  
+.layer-node.selected .node-svg-container {
+    outline: 2px solid #4285f4;
+    outline-offset: 2px;
+
+}
+  
+
+  
+  /* For nodes with existing background color */
+  .pooling-layer.selected {
+    box-shadow: 0 0 0 3px #ffc107, 0 4px 10px rgba(0, 0, 0, 0.3);
+  }
+
+  .connection-point {
+    position: absolute;
+    width: 12px;
+    height: 12px;
+    background-color: #fff;
+    border: 2px solid #000;
+    border-radius: 50%;
+    z-index: 3;
+    
+    /* Hide by default */
+    opacity: 0;
+    transform: scale(0.8);
+    transition: opacity 0.2s ease, transform 0.2s ease;
+  }
+  
+  .input-point {
+    left: -6px;
+    top: 50%;
+    transform: translateY(-50%) scale(0.8);
+  }
+  
+  .output-point {
+    right: -6px;
+    top: 50%;
+    transform: translateY(-50%) scale(0.8);
+  }
+
+  .layer-node:hover .connection-point {
+    opacity: 1;
+    transform: translateY(-50%) scale(1);
+  }  
+
+  .layer-node.selected .connection-point {
+    opacity: 1;
+    transform: translateY(-50%) scale(1);
+  }  
+
+  #connections {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 1; /* Above background, below nodes */
+    pointer-events: none; /* Allow clicks to pass through to elements below */
+  }
+
+  .node-text {
+    font-size: 12px;  /* You can adjust the font size as needed */
+    font-weight: bold; /* Make the text stand out more, optional */
+    color: #333;       /* Text color */
+    position: absolute;
+    top: -20px;        /* Adjust this value to control the distance between the text and the node */
+    left: 50%;
+    transform: translateX(-50%); /* This will center the text horizontally above the node */
+    white-space: nowrap;  /* Prevent the text from wrapping */
+    text-align: center;   /* Center the text inside the div */
+  }
