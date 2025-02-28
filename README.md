@@ -32,8 +32,3 @@ Use the Live Server extension in Visual Studio Code:
    npm install -g live-server // Install globally via npm
    live-server                // Run in the html's directory
 
-
-
-
-   
-
