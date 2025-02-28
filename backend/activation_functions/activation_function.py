@@ -17,7 +17,7 @@ class ReLUFunction(ActivationFunction):
         
     @staticmethod
     def load_svg():
-        svg_path = os.path.join('..', 'assets', 'relu.svg')
+        svg_path = os.path.join('.', 'assets', 'relu.svg')
         with open(svg_path, 'r') as svg_file:
             return svg_file.read()
     
@@ -45,7 +45,7 @@ class TanhFunction(ActivationFunction):
         
     @staticmethod
     def load_svg():
-        svg_path = os.path.join('..', 'assets', 'tanh.svg')
+        svg_path = os.path.join('.', 'assets', 'tanh.svg')
         with open(svg_path, 'r') as svg_file:
             return svg_file.read()
     
@@ -70,7 +70,7 @@ class LeakyReLUFunction(ActivationFunction):
         
     @staticmethod
     def load_svg():
-        svg_path = os.path.join('..', 'assets', 'leaky_relu.svg')
+        svg_path = os.path.join('.', 'assets', 'leaky_relu.svg')
         with open(svg_path, 'r') as svg_file:
             return svg_file.read()
     

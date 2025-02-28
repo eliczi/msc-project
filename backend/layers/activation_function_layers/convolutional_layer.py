@@ -10,7 +10,7 @@ class ConvolutionType(Enum):
 
 
 class ConvolutionalLayer(Layer):
-    path = os.path.join('..', 'assets', 'drawing.svg')
+    path = os.path.join('.', 'assets', 'drawing.svg')
 
     def __init__(self, layer_type: ConvolutionType, filters: int, stride: int):
         super().__init__()

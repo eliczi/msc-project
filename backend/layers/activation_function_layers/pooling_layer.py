@@ -6,7 +6,7 @@ class PoolingType(Enum):
     AVG = "Avg"
 
 class PoolingLayer(Layer):
-    path = os.path.join('..', 'assets', 'drawing.svg')
+    path = os.path.join('.', 'assets', 'drawing.svg')
     def __init__(self, pooling_type: PoolingType):
         super().__init__()
         self.pooling_type = pooling_type
