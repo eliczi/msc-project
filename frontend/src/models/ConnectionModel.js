@@ -1,11 +1,12 @@
 
 class ConnectionModel {
 
-    constructor(id, backendId, sourceId, targetId) {
+    constructor(id, sourceId, targetId, node, connectionElement) {
       this.id = id;
-      this.backendId = backendId;
       this.sourceId = sourceId;
       this.targetId = targetId;
+      this.node = node
+      this.connectionElement = connectionElement
     }
   }
   

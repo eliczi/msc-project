@@ -1,8 +1,5 @@
 import apiClient from '../api/ApiClient.js';
 import LayerModel from './LayerModel.js';
-import ConnectionModel from './ConnectionModel.js';
-import LayerPanel from '../ui/LayerPanel.js';
-
 
 class NetworkModel {
   constructor() {
@@ -25,22 +22,13 @@ class NetworkModel {
       return false;
     }
   }
-  
-  async addLayer(type, params, x, y) {
-    try {
-      if (!this.id) {
-        throw new Error('No active network');
-      }
+    async addLayer(type, params, x, y) {
       const backendId = await apiClient.addLayer(this.id, type, params);
       const nodeId = this.nextNodeId++;
       const layer = new LayerModel(nodeId, backendId, type, params, x, y);
       this.layers.push(layer);
       return layer;
 
-    } catch (error) {
-      console.error('Failed to add layer:', error);
-      return null;
-    }
   }
     
   getLayerType(typeName) {
@@ -51,6 +39,20 @@ class NetworkModel {
     this.layers = [];
     this.connections = [];
     this.nextNodeId = 1;
+  }
+
+  addConnection(connection){
+    this.connections.push(connection)
+  }
+
+  getConnectionId(){
+    return this.connections.length
+  }
+
+  
+  removeLayer(layerId) {
+    const layerIndex = this.layers.findIndex(layer => layer.id == layerId);    
+    this.layers.splice(layerIndex, 1);
   }
 }
 

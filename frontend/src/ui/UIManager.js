@@ -1,7 +1,5 @@
 import LayerPanel from './LayerPanel.js';
 import Canvas from './Canvas.js';
-import ConnectionVisualizer from './ConnectionVisualizer.js';
-import NetworkModel from '../models/NetworkModel.js';
 
 class UIManager {
   constructor() {
@@ -9,12 +7,12 @@ class UIManager {
       layerTypesContainer: document.getElementById('layer-types-container'),
       drawingArea: document.getElementById('drawing-area'),
       clearBtn: document.getElementById('clear-btn'),
-      connectionsSvg: document.getElementById('connections')
+      //connectionsSvg: document.getElementById('connections')
     };
     
     this.layerPanel = new LayerPanel(this.elements.layerTypesContainer);
     this.canvas = new Canvas(this.elements.drawingArea);
-    this.connectionVisualizer = new ConnectionVisualizer(this.elements.connectionsSvg);
+    //this.connectionVisualizer = new ConnectionVisualizer(this.elements.connectionsSvg);
     this.setupEventListeners();
   }
   
@@ -24,10 +22,6 @@ class UIManager {
         this.canvas.clearCanvas();
       }
     });
-  }
-  
-  showError(message) {
-    alert(message);
   }
 }
 

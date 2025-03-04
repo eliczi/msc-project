@@ -5,6 +5,7 @@ import UIManager from './ui/UIManager.js';
 class App {
   constructor() {
     this.uiManager = null;
+    this.neuralNetwork = null;
   }
 
   async init() {
@@ -21,14 +22,6 @@ class App {
     } catch (error) {
       console.error('App: Initialization failed:', error);
       alert(`Initialization failed: ${error.message}.`);
-    }
-  }
-  
-  handleError(errorMessage) {
-    if (this.uiManager) {
-      this.uiManager.showError(errorMessage);
-    } else {
-      alert(errorMessage);
     }
   }
 }

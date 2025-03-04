@@ -1,8 +1,11 @@
 import { DEFAULT_STYLES } from '../config.js';
 import DomUtils from '../utils/DomUtils.js';
+import { InputPoint, OutputPoint } from './ConnectionPoint.js';
+import LayerModel from '../models/LayerModel.js';
+import ConnectionVisualizer from './ConnectionVisualizer.js';
 
 
-class NodeFactory {
+class LayerFactory {
 
   static createNodeElement(nodeId, type, x, y, clickHandler, layerTypeDef) {
     const node = DomUtils.createElementWithClass('div', 'layer-node');
@@ -15,7 +18,6 @@ class NodeFactory {
     node.style.left = `${x - offsetX}px`;
     node.style.top = `${y - offsetY}px`;
     
-    
     if (layerTypeDef && layerTypeDef.svg_representation && layerTypeDef.svg_representation.svg_content) {
       node.innerHTML = '';
       const svgContainer = DomUtils.createElementWithClass('div', 'node-svg-container');
@@ -24,23 +26,26 @@ class NodeFactory {
 
       const svgElement = svgContainer.querySelector('svg');
       if (svgElement) {
-        svgElement.setAttribute('width', '64');
-        svgElement.setAttribute('height', '64'); 
-        svgContainer.style.width = '64px';
-        svgContainer.style.height = '64px';
+        this.setDimensions(svgElement, svgContainer, type);
       }
       node.appendChild(svgContainer);
 
     } else {
-      const displayName = type.replace('Layer', '');
-      node.textContent = displayName;
+      node.textContent = type.replace('Layer', '');
     }
 
     //create connecting points
-    const inputPoint = DomUtils.createElementWithClass('div', 'connection-point input-point');
-    const outputPoint = DomUtils.createElementWithClass('div', 'connection-point output-point');
-    node.appendChild(inputPoint);
-    node.appendChild(outputPoint);
+    const inputPoint = new InputPoint(node);
+    const outputPoint = new OutputPoint(node);
+    
+    // add the connection points to the node
+    node.appendChild(inputPoint.getElement());
+    node.appendChild(outputPoint.getElement());
+
+    node._inputPoint = inputPoint;
+    node._outputPoint = outputPoint;
+
+    this.addHoverText(node, type);
 
     //this.addText(node, layerTypeDef);
     
@@ -53,6 +58,32 @@ class NodeFactory {
     });
     
     return node;
+  }
+
+  static addHoverText(node, type) {
+    console.log('ssss')
+    const hoverText = DomUtils.createElementWithClass('div', 'node-hover-text');
+    hoverText.textContent = type.replace('Layer', ' Layer');
+    hoverText.style.position = 'absolute';
+    hoverText.style.top = '-40px';
+    hoverText.style.left = '50%';
+    hoverText.style.transform = 'translateX(-50%)';
+    hoverText.style.backgroundColor = 'rgba(0, 0, 0, 0.75)';
+    hoverText.style.color = 'white';
+    hoverText.style.padding = '4px 8px';
+    hoverText.style.borderRadius = '4px';
+    hoverText.style.fontSize = '12px';
+    hoverText.style.whiteSpace = 'nowrap';
+    hoverText.style.display = 'none';
+    node.appendChild(hoverText);
+
+    node.addEventListener('mouseenter', () => {
+      hoverText.style.display = 'block';
+    });
+
+    node.addEventListener('mouseleave', () => {
+      hoverText.style.display = 'none';
+    });
   }
 
   static addText(node, layerTypeDef){
@@ -70,7 +101,8 @@ class NodeFactory {
   static makeDraggable(element) {
     let isDragging = false;
     let offsetX, offsetY;
-    
+    const visualizer = ConnectionVisualizer.getInstance();
+
     element.addEventListener('mousedown', startDrag);
     
     function startDrag(e) {
@@ -84,13 +116,11 @@ class NodeFactory {
       offsetY = e.clientY - rect.top;
       document.addEventListener('mousemove', drag);
       document.addEventListener('mouseup', stopDrag);
-      
       e.preventDefault();
     }
     
     function drag(e) {
       if (!isDragging) return;
-      
       const drawingArea = element.parentElement;
       const rect = drawingArea.getBoundingClientRect();
       
@@ -103,7 +133,8 @@ class NodeFactory {
       
       element.style.left = `${left}px`;
       element.style.top = `${top}px`;
-    
+      visualizer.updateConnectionsForNode(element.dataset.id);
+
     }
     
     function stopDrag() {
@@ -112,7 +143,14 @@ class NodeFactory {
       document.removeEventListener('mouseup', stopDrag);
     }
   }
-
+  
+  static setDimensions(svgElement,svgContainer, layerType) {
+    const dimensions = LayerModel.getDimensionsForType(layerType)
+    svgElement.setAttribute('width', dimensions.width);
+    svgElement.setAttribute('height', dimensions.height); 
+    svgContainer.style.width = '112'; //connection point
+    svgContainer.style.height = '64px';
+  }
 }
 
-export default NodeFactory;
+export default LayerFactory;

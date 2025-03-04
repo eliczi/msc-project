@@ -6,10 +6,6 @@ class LayerPanel {
   }
   
   renderLayerTypes(layerTypes) {
-    if (!this.container) {
-      console.error('Layer types container is null or undefined');
-      return;
-    }
     this.container.innerHTML = '';
     
     layerTypes.forEach(layerType => {
@@ -19,7 +15,6 @@ class LayerPanel {
       // make draggable
       layerTypeElement.draggable = true;
       layerTypeElement.addEventListener('dragstart', this.handleLayerTypeDragStart.bind(this));
-      
       this.container.appendChild(layerTypeElement);
     });
   }

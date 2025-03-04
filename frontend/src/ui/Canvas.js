@@ -1,7 +1,6 @@
 import NetworkModel from '../models/NetworkModel.js';
-import NodeFactory from './NodeFactory.js';
-
-
+import LayerFactory from './LayerFactory.js';
+import ConnectionVisualizer from './ConnectionVisualizer.js';
 class Canvas {
 
   constructor(canvasElement) {
@@ -36,7 +35,6 @@ class Canvas {
   setupEventListeners() {
     this.canvas.addEventListener('click', (e) => {
       if (e.target === this.canvas) {
-        console.log('click')
         this.deselectCurrentNode();
       }
     });
@@ -65,7 +63,7 @@ class Canvas {
       const layer = await NetworkModel.addLayer(layerType, params, x, y);
       if (!layer) throw new Error('Failed to create layer');
       
-      const nodeElement = NodeFactory.createNodeElement(
+      const nodeElement = LayerFactory.createNodeElement(
         layer.id,
         layerType,
         x,
@@ -77,8 +75,8 @@ class Canvas {
       this.canvas.appendChild(nodeElement);
       layer.setElement(nodeElement);
       this.selectNode(layer.id);
-      
       return layer;
+      
     } catch (error) {
       console.error('Failed to create layer:', error);
       return null;
@@ -110,13 +108,19 @@ class Canvas {
 
   clearCanvas() {
     const nodes = this.canvas.querySelectorAll('.layer-node');
-    nodes.forEach(node => node.remove());    
+    nodes.forEach(node => node.remove());
+    ConnectionVisualizer.getInstance().removeAllConnections();    
     NetworkModel.clear();
+    
   }
 
-  deleteNode(){
-    const prevNode = document.querySelector(`.layer-node[data-id="${this.selectedNodeId}"]`);
-    prevNode.remove();
+  deleteNode() {
+    if (!this.selectedNodeId) return;
+    ConnectionVisualizer.getInstance().removeConnectionsForNode(this.selectedNodeId);
+    const nodeElement = document.querySelector(`.layer-node[data-id="${this.selectedNodeId}"]`);
+    nodeElement.remove();
+    NetworkModel.removeLayer(this.selectedNodeId);
+    this.selectedNodeId = null;
   }
   
 }

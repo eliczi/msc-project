@@ -127,11 +127,6 @@ h1, h2 {
 /* Layer nodes */
 .layer-node {
     position: absolute;
-    cursor: move;
-}
-
-.pooling-layer {
-    background-color: #34a853;
 }
 
 .layer-node.selected {
@@ -144,68 +139,48 @@ h1, h2 {
 
 }
   
+.connection-point {
+position: absolute;
+width: 12px;
+height: 12px;
+background-color: #fff;
+border: 2px solid #000;
+border-radius: 50%;
+z-index: 3;
+/* Hide by default */
+opacity: 0;
+transform: scale(0.8);
+transition: opacity 0.2s ease, transform 0.2s ease;
+}
 
-  
-  /* For nodes with existing background color */
-  .pooling-layer.selected {
-    box-shadow: 0 0 0 3px #ffc107, 0 4px 10px rgba(0, 0, 0, 0.3);
-  }
-
-  .connection-point {
-    position: absolute;
-    width: 12px;
-    height: 12px;
-    background-color: #fff;
-    border: 2px solid #000;
-    border-radius: 50%;
-    z-index: 3;
-    
-    /* Hide by default */
-    opacity: 0;
-    transform: scale(0.8);
-    transition: opacity 0.2s ease, transform 0.2s ease;
-  }
-  
-  .input-point {
-    left: -6px;
+.input-point {
+    left: -4px;
     top: 50%;
     transform: translateY(-50%) scale(0.8);
-  }
-  
-  .output-point {
-    right: -6px;
+}
+
+.output-point {
+    right: -5px;
     top: 50%;
     transform: translateY(-50%) scale(0.8);
-  }
+}
 
-  .layer-node:hover .connection-point {
+.layer-node:hover .connection-point {
     opacity: 1;
     transform: translateY(-50%) scale(1);
-  }  
+}  
 
-  .layer-node.selected .connection-point {
-    opacity: 1;
-    transform: translateY(-50%) scale(1);
-  }  
+.layer-node.selected .connection-point {
+opacity: 1;
+transform: translateY(-50%) scale(1);
+}  
 
-  #connections {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    z-index: 1; /* Above background, below nodes */
-    pointer-events: none; /* Allow clicks to pass through to elements below */
-  }
-
-  .node-text {
-    font-size: 12px;  /* You can adjust the font size as needed */
-    font-weight: bold; /* Make the text stand out more, optional */
-    color: #333;       /* Text color */
-    position: absolute;
-    top: -20px;        /* Adjust this value to control the distance between the text and the node */
-    left: 50%;
-    transform: translateX(-50%); /* This will center the text horizontally above the node */
-    white-space: nowrap;  /* Prevent the text from wrapping */
-    text-align: center;   /* Center the text inside the div */
-  }
+#connections {
+position: absolute;
+top: 0;
+left: 0;
+width: 100%;
+height: 100%;
+z-index: 1; /* Above background, below nodes */
+pointer-events: none; /* Allow clicks to pass through to elements below */
+}

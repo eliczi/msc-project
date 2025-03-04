@@ -2,9 +2,9 @@
 <!-- Created with Inkscape (http://www.inkscape.org/) -->
 
 <svg
-   width="131.57001mm"
-   height="131.57001mm"
-   viewBox="0 0 131.57001 131.57001"
+   width="65.015388mm"
+   height="65.015198mm"
+   viewBox="0 0 65.01539 65.015199"
    version="1.1"
    id="svg1"
    inkscape:version="1.4 (e7c3feb1, 2024-10-09)"
@@ -23,9 +23,9 @@
      inkscape:pagecheckerboard="0"
      inkscape:deskcolor="#d1d1d1"
      inkscape:document-units="mm"
-     inkscape:zoom="1.0776888"
-     inkscape:cx="191.61376"
-     inkscape:cy="274.1979"
+     inkscape:zoom="2.0775826"
+     inkscape:cx="91.211776"
+     inkscape:cy="128.75541"
      inkscape:window-width="1728"
      inkscape:window-height="972"
      inkscape:window-x="0"
@@ -36,36 +36,37 @@
      id="defs1">
     <inkscape:perspective
        sodipodi:type="inkscape:persp3d"
-       inkscape:vp_x="0 : 65.785005 : 1"
-       inkscape:vp_y="0 : 1000 : 0"
-       inkscape:vp_z="131.57001 : 65.785005 : 1"
-       inkscape:persp3d-origin="65.785005 : 43.85667 : 1"
+       inkscape:vp_x="0 : -0.76980697 : 1"
+       inkscape:vp_y="0 : 999.99998 : 0"
+       inkscape:vp_z="131.57001 : -0.76980697 : 1"
+       inkscape:persp3d-origin="65.785006 : -22.698142 : 1"
        id="perspective2" />
   </defs>
   <g
      inkscape:label="Layer 1"
      inkscape:groupmode="layer"
      id="layer1"
-     transform="translate(-12.110294,-78.599476)">
-    <circle
-       style="fill:#ffffff;stroke:#000000;stroke-width:3.4;stroke-dasharray:none"
+     transform="translate(-12.38763,-78.87681)">
+    <ellipse
+       style="fill:#ffffff;stroke:#000000;stroke-width:2;stroke-dasharray:none"
        id="path1"
-       cx="77.895294"
-       cy="144.38448"
-       r="64" />
+       cx="44.895325"
+       cy="111.38441"
+       rx="31.507694"
+       ry="31.507597" />
     <path
-       style="fill:#ffffff;stroke:#000000;stroke-width:0.7;stroke-dasharray:none"
-       d="M 77.895298,80.353053 V 208.41591 Z"
+       style="fill:#ffffff;stroke:#000000;stroke-width:0.344615;stroke-dasharray:none"
+       d="M 44.895328,79.861343 V 142.90748 Z"
        id="path2"
        sodipodi:nodetypes="ccc" />
     <path
-       style="fill:#ffffff;stroke:#000000;stroke-width:0.7;stroke-dasharray:none"
-       d="M 137.16777,167.66796 H 18.714719 Z"
+       style="fill:#ffffff;stroke:#000000;stroke-width:0.344615;stroke-dasharray:none"
+       d="M 74.075623,122.84702 H 15.760272 Z"
        id="path2-1"
        sodipodi:nodetypes="ccc" />
     <path
-       style="fill:none;stroke:#000000;stroke-width:3.8;stroke-dasharray:none"
-       d="M 18.908688,165.61521 H 78.892315 L 132.92064,111.5869"
+       style="fill:none;stroke:#000000;stroke-width:2;stroke-dasharray:none"
+       d="M 15.855765,121.83644 H 45.386166 L 71.984728,95.237961"
        id="path9" />
   </g>
 </svg>

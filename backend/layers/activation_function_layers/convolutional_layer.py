@@ -17,8 +17,7 @@ class ConvolutionalLayer(Layer):
         self.layer_type = layer_type
         self.filters = filters
         self.stride = stride
-        
-    
+
     @classmethod
     def from_params(cls, params):
         conv_type_str = params.get('conv_type', 'VALID')

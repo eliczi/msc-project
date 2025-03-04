@@ -79,7 +79,6 @@ class ApiClient {
         mode: 'cors',
         cache: 'no-cache',
       });
-      
       return response.ok;
     } catch (error) {
       console.error('API connection test failed:', error);
