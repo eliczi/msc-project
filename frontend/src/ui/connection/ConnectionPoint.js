@@ -1,8 +1,8 @@
-import DomUtils from '../utils/DomUtils.js';
-import ConnectionModel from '../models/ConnectionModel.js';
-import NetworkModel from '../models/NetworkModel.js';
-import ConnectionVisualizer from './ConnectionVisualizer.js';
-
+import DomUtils from '../../utils/DomUtils.js';
+import ConnectionModel from '../../models/ConnectionModel.js';
+import NetworkModel from '../../models/NetworkModel.js';
+import ConnectionVisualizer from '../connection/ConnectionVisualizer.js';
+import { GeometryUtils } from '../connection/GeometryUtils.js';
 
 class ConnectionPoint {
   constructor(type, node, position) {
@@ -16,9 +16,8 @@ class ConnectionPoint {
     //drawingline
     this.activeLine = null;
     this.activePath = null;
-    this.isDrawing = false;
     
-
+    // Get the singleton instance of ConnectionVisualizer
     this.visualizer = ConnectionVisualizer.getInstance();
 
     // pre-bind event handlers to ensure the same reference is used
@@ -34,7 +33,7 @@ class ConnectionPoint {
 
   setupEventListeners() {
     this.element.addEventListener('mousedown', (e) => {
-      e.stopPropagation();
+      //e.stopPropagation();
       this.onMouseDown(e);
     });
 
@@ -48,13 +47,15 @@ class ConnectionPoint {
   }
 
   onMouseDown(e) {
-    this.isDrawing = true;
-
-    const startCoords = this.visualizer.calculatePointCoordinates(this);
+    // Use GeometryUtils directly or through visualizer
+    const startCoords = GeometryUtils.calculatePointCoordinates(this, this.visualizer.svgContainer);
+    // Alternative if you prefer to keep using the visualizer's method:
+    // const startCoords = this.visualizer.drawer.calculatePointCoordinates(this);
+    
     this.startX = startCoords.x;
     this.startY = startCoords.y;
     
-    const lineObjects = this.visualizer.createTemporaryLine(this.startX, this.startY);
+    const lineObjects = this.visualizer.createTemporaryLine(DomUtils.getScale());
     this.activeLine = lineObjects.line;
     this.activePath = lineObjects.path;
 
@@ -72,50 +73,44 @@ class ConnectionPoint {
   }
 
   onMouseMove(e) {
-    if (this.isDrawing) {
-      this.visualizer.updateTemporaryLine(
-        this.activePath, 
-        this.startX, 
-        this.startY, 
-        e.clientX, 
-        e.clientY, 
-        this.type
-      );
-    }
+    this.visualizer.updateTemporaryLine(
+      this.activePath, 
+      this.startX, 
+      this.startY, 
+      e.clientX, 
+      e.clientY, 
+      this.type
+    );
   }
   
   onMouseUp(e) {
     document.removeEventListener('mousemove', this.boundMouseMove);
     document.removeEventListener('mouseup', this.boundMouseUp);
   
-    if (this.isDrawing) {
-      this.isDrawing = false;
-      const pointUnderMouse = this.findConnectionPointUnderMouse(e);
-      
-      if (pointUnderMouse) {
-        if (this.type === 'output' && pointUnderMouse.classList.contains('input-point')) {
-          const sourceNode = this.node;
-          const targetNode = this.findParentNode(pointUnderMouse);
-          if (sourceNode && targetNode) {
-            this.createConnection(sourceNode.dataset.id, targetNode.dataset.id);
-          }
-        } else if (this.type === 'input' && pointUnderMouse.classList.contains('output-point')) {
-          const sourceNode = this.findParentNode(pointUnderMouse);
-          const targetNode = this.node;
-          if (sourceNode && targetNode) {
-            this.createConnection(sourceNode.dataset.id, targetNode.dataset.id);
-          }
-        } else {
-          this.visualizer.removeTemporaryLine(this.activeLine);
-          this.activeLine = null;
-          this.activePath = null;
+    const pointUnderMouse = this.findConnectionPointUnderMouse(e);
+    
+    if (pointUnderMouse) {
+      if (this.type === 'output' && pointUnderMouse.classList.contains('input-point')) {
+        const sourceNode = this.node;
+        const targetNode = this.findParentNode(pointUnderMouse);
+        if (sourceNode && targetNode) {
+          this.createConnection(sourceNode.dataset.id, targetNode.dataset.id);
+        }
+      } else if (this.type === 'input' && pointUnderMouse.classList.contains('output-point')) {
+        const sourceNode = this.findParentNode(pointUnderMouse);
+        const targetNode = this.node;
+        if (sourceNode && targetNode) {
+          this.createConnection(sourceNode.dataset.id, targetNode.dataset.id);
         }
       } else {
         this.visualizer.removeTemporaryLine(this.activeLine);
         this.activeLine = null;
         this.activePath = null;
       }
-      
+    } else {
+      this.visualizer.removeTemporaryLine(this.activeLine);
+      this.activeLine = null;
+      this.activePath = null;
     }
   }
 
@@ -140,17 +135,21 @@ class ConnectionPoint {
 
   findParentNode(connectionPointElement) {
     let currentElement = connectionPointElement;
-    while (currentElement && !currentElement.classList.contains('layer-node')) {
+    while (currentElement && !currentElement.classList.contains('layer-node') && !currentElement.classList.contains('layer-group')) {
       currentElement = currentElement.parentElement;
     }
     return currentElement;
   }
 
-  createConnection(source, target){
+  createConnection(source, target) {
     const id = NetworkModel.getConnectionId();
     const connectionElement = this.visualizer.createPermanentConnection(source, target);
     if (connectionElement) {
-      const connection = new ConnectionModel(id, source, target, this.node, connectionElement);
+      let targetNode = document.querySelector(`.layer-node[data-id="${target}"]`);
+      if (!targetNode) {
+        targetNode = document.querySelector(`.layer-group[data-id="${target}"]`);
+      }
+      const connection = new ConnectionModel(id, source, target, this.node, targetNode, connectionElement);
       NetworkModel.addConnection(connection);
       this.visualizer.removeTemporaryLine(this.activeLine);
       this.activeLine = null;

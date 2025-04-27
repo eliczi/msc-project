@@ -1,12 +1,14 @@
 
 class ConnectionModel {
 
-    constructor(id, sourceId, targetId, node, connectionElement) {
+    constructor(id, sourceId, targetId, sourceNode, targetNode, connectionElement, groupId = null) {
       this.id = id;
       this.sourceId = sourceId;
       this.targetId = targetId;
-      this.node = node
+      this.source_node = sourceNode
+      this.target_node = targetNode
       this.connectionElement = connectionElement
+      this.groupId = groupId
     }
   }
   

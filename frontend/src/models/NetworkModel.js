@@ -1,6 +1,6 @@
 import apiClient from '../api/ApiClient.js';
 import LayerModel from './LayerModel.js';
-
+import GroupModel from './GroupModel.js';
 class NetworkModel {
   constructor() {
     this.id = null;
@@ -8,13 +8,14 @@ class NetworkModel {
     this.connections = []; 
     this.layerTypes = [];
     this.nextNodeId = 1;
+    this.groups = []
   }
   
   async initialize() {
     try {
       this.id = await apiClient.createNetwork();
-      const layerTypes = await apiClient.getLayerTypes();
-      this.layerTypes = layerTypes;
+      this.layerTypes = await apiClient.getLayerTypes();
+      //this.layerTypes = layerTypes;
       return true;
       
     } catch (error) {
@@ -22,12 +23,12 @@ class NetworkModel {
       return false;
     }
   }
-    async addLayer(type, params, x, y) {
-      const backendId = await apiClient.addLayer(this.id, type, params);
-      const nodeId = this.nextNodeId++;
-      const layer = new LayerModel(nodeId, backendId, type, params, x, y);
-      this.layers.push(layer);
-      return layer;
+  async addLayer(type, params, x, y) {
+    const backendId = await apiClient.addLayer(this.id, type, params);
+    const nodeId = this.nextNodeId++;
+    const layer = new LayerModel(nodeId, backendId, type, params, x, y);
+    this.layers.push(layer);
+    return layer;
 
   }
     
@@ -53,6 +54,10 @@ class NetworkModel {
   removeLayer(layerId) {
     const layerIndex = this.layers.findIndex(layer => layer.id == layerId);    
     this.layers.splice(layerIndex, 1);
+  }
+
+  getLayerById(id) {
+    return this.layers.find(layer => layer.id === id);
   }
 }
 

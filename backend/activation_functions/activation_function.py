@@ -28,7 +28,26 @@ class ReLUFunction(ActivationFunction):
         }
 
 class SoftMaxFunction(ActivationFunction):
-    pass
+    def __init__(self):
+        super().__init__()
+        
+        
+    @classmethod
+    def from_params(cls, params):
+        #placeholder values
+        return cls()
+        
+    @staticmethod
+    def load_svg():
+        svg_path = os.path.join('.', 'assets', 'softmax.svg')
+        with open(svg_path, 'r') as svg_file:
+            return svg_file.read()
+    
+    @staticmethod
+    def get_svg_representation():
+        return {
+            "svg_content": SoftMaxFunction.load_svg()
+        }
 
 class SigmoidFunction(ActivationFunction):
     pass
@@ -59,14 +78,15 @@ class IdentityFunction(ActivationFunction):
     pass
 
 class LeakyReLUFunction(ActivationFunction):
-    def __init__(self):
+    def __init__(self, alpha):
         super().__init__()
+        self.alpha = alpha
         
         
     @classmethod
     def from_params(cls, params):
         #placeholder values
-        return cls()
+        return cls(0.01)
         
     @staticmethod
     def load_svg():

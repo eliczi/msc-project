@@ -1,0 +1,154 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+   width="59.991623mm"
+   height="49.117737mm"
+   viewBox="0 0 59.991623 49.117737"
+   version="1.1"
+   id="svg1"
+   inkscape:version="1.4 (e7c3feb1, 2024-10-09)"
+   sodipodi:docname="dropout_layer.svg"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg">
+  <sodipodi:namedview
+     id="namedview1"
+     pagecolor="#ffffff"
+     bordercolor="#000000"
+     borderopacity="0.25"
+     inkscape:showpageshadow="2"
+     inkscape:pageopacity="0.0"
+     inkscape:pagecheckerboard="0"
+     inkscape:deskcolor="#d1d1d1"
+     inkscape:document-units="mm"
+     inkscape:zoom="2.1940401"
+     inkscape:cx="69.506479"
+     inkscape:cy="116.45184"
+     inkscape:window-width="1728"
+     inkscape:window-height="972"
+     inkscape:window-x="0"
+     inkscape:window-y="38"
+     inkscape:window-maximized="1"
+     inkscape:current-layer="layer1"
+     showgrid="false" />
+  <defs
+     id="defs1">
+    <marker
+       style="overflow:visible"
+       id="ArrowWideRounded"
+       refX="0"
+       refY="0"
+       orient="auto-start-reverse"
+       inkscape:stockid="Wide, rounded arrow"
+       markerWidth="1"
+       markerHeight="1"
+       viewBox="0 0 1 1"
+       inkscape:isstock="true"
+       inkscape:collect="always"
+       preserveAspectRatio="xMidYMid">
+      <path
+         style="fill:none;stroke:context-stroke;stroke-width:1;stroke-linecap:round"
+         d="M 3,-3 0,0 3,3"
+         transform="rotate(180,0.125,0)"
+         sodipodi:nodetypes="ccc"
+         id="path2" />
+    </marker>
+    <inkscape:perspective
+       sodipodi:type="inkscape:persp3d"
+       inkscape:vp_x="0 : 68.651776 : 1"
+       inkscape:vp_y="0 : 1000 : 0"
+       inkscape:vp_z="64.000001 : 68.651776 : 1"
+       inkscape:persp3d-origin="32.000001 : 59.807096 : 1"
+       id="perspective11" />
+    <filter
+       style="color-interpolation-filters:sRGB"
+       inkscape:label="Drop Shadow"
+       id="filter30"
+       x="-0.4131175"
+       y="-0.4131175"
+       width="1.6577377"
+       height="1.6577377">
+      <feFlood
+         result="flood"
+         flood-opacity="0.53907815631262523"
+         flood-color="rgb(0,0,0)"
+         id="feFlood29" />
+      <feGaussianBlur
+         result="blur"
+         in="SourceGraphic"
+         stdDeviation="1.6949152542372881"
+         id="feGaussianBlur29" />
+      <feOffset
+         result="offset"
+         dx="-3.4907597535934309"
+         dy="-3.4907597535934309"
+         id="feOffset29" />
+      <feComposite
+         result="comp1"
+         operator="in"
+         in="flood"
+         in2="offset"
+         id="feComposite29" />
+      <feComposite
+         result="comp2"
+         operator="over"
+         in="SourceGraphic"
+         in2="comp1"
+         id="feComposite30" />
+    </filter>
+  </defs>
+  <g
+     inkscape:label="Layer 1"
+     inkscape:groupmode="layer"
+     id="layer1"
+     transform="translate(-46.854645,-48.355972)">
+    <rect
+       style="fill:#999999;stroke:#000000;stroke-width:1;stroke-linecap:round;stroke-opacity:1"
+       id="rect11"
+       width="16"
+       height="16"
+       x="47.354645"
+       y="58.855972" />
+    <rect
+       style="fill:#cccccc;stroke:#000000;stroke-width:1;stroke-linecap:round;stroke-opacity:1"
+       id="rect11-2"
+       width="16"
+       height="16"
+       x="52.571995"
+       y="65.21167" />
+    <rect
+       style="fill:#e6e6e6;stroke:#000000;stroke-width:1;stroke-linecap:round;stroke-opacity:1"
+       id="rect11-0"
+       width="16"
+       height="16"
+       x="57.575844"
+       y="71.05574" />
+    <rect
+       style="fill:#999999;stroke:#000000;stroke-width:1;stroke-linecap:round;stroke-opacity:1"
+       id="rect11-0-7"
+       width="16"
+       height="16"
+       x="90.333733"
+       y="48.855972" />
+    <rect
+       style="fill:#cccccc;stroke:#000000;stroke-width:1;stroke-linecap:round;stroke-opacity:1"
+       id="rect11-0-4"
+       width="16"
+       height="16"
+       x="90.346268"
+       y="64.925148" />
+    <rect
+       style="fill:#e6e6e6;stroke:#000000;stroke-width:1;stroke-linecap:round;stroke-opacity:1"
+       id="rect11-0-5"
+       width="16"
+       height="16"
+       x="90.346268"
+       y="80.973709" />
+    <path
+       style="fill:#cccccc;stroke:#000000;stroke-width:1;stroke-linecap:round;stroke-opacity:1;marker-end:url(#ArrowWideRounded)"
+       d="m 77.3164,72.855972 h 8.662617"
+       id="path16" />
+  </g>
+</svg>

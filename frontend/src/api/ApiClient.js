@@ -4,7 +4,7 @@ class ApiClient {
 
   async fetchApi(endpoint, options = {}) {
     try {
-      console.log(`Fetching: ${API_URL}/${endpoint}`);
+      // console.log(`Fetching: ${API_URL}/${endpoint}`);
       
       const response = await fetch(`${API_URL}/${endpoint}`, {
         ...options,
