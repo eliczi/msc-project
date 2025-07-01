@@ -26,15 +26,15 @@ from layers.layer import Layer
 import inspect
 from neural_network import NeuralNetwork
 from connection import Connection
-from flask_jwt_extended import (
-    JWTManager, create_access_token,
-    jwt_required, get_jwt_identity
-)
+# from flask_jwt_extended import (
+#     JWTManager, create_access_token,
+#     jwt_required, get_jwt_identity
+# )
 
 
 app = Flask(__name__)
 app.config['JWT_SECRET_KEY'] = 'e3f7a0bd67b94e5f8c3bbac435a2d1b204dab5d52db7c1fdc3f85f95f238dfab'  # use env var in production
-jwt = JWTManager(app)
+# jwt = JWTManager(app)
 
 users = {
     "admin": {"password": "admin123"},
@@ -51,8 +51,8 @@ def login():
     if not user or user['password'] != password:
         return jsonify({"error": "Invalid credentials"}), 401
     
-    access_token = create_access_token(identity=username)
-    return jsonify(access_token=access_token)
+    #access_token = create_access_token(identity=username)
+    #return jsonify(access_token=access_token)
 
 
 CORS(app, resources={r"/api/*": {"origins": "*"}})
