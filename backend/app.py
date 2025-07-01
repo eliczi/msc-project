@@ -285,5 +285,5 @@ def find_network_by_id(id) -> NeuralNetwork:
     return None
         
 if __name__ == '__main__':
-    print("Starting Flask server on http://localhost:5001")
+    print("Starting Flask server on https://msc-project-8fbo.onrender.com")
     app.run(debug=True, port=5001)
