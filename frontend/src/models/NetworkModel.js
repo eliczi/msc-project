@@ -24,6 +24,7 @@ class NetworkModel {
     }
   }
   async addLayer(type, params, x, y) {
+
     const backendId = await apiClient.addLayer(this.id, type, params);
     const nodeId = this.nextNodeId++;
     const layer = new LayerModel(nodeId, backendId, type, params, x, y);
@@ -58,6 +59,13 @@ class NetworkModel {
 
   getLayerById(id) {
     return this.layers.find(layer => layer.id === id);
+  }
+
+  reset(){
+    this.layers = []; 
+    this.connections = []; 
+    this.nextNodeId = 1;
+    this.groups = []
   }
 }
 

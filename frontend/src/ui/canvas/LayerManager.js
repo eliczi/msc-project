@@ -14,9 +14,9 @@ class LayerManager {
   async createLayer(layerType, x, y, scale) {
     const layerTypeDef = this.networkModel.getLayerType(layerType);
     if (!layerTypeDef) return null;
-    
+
+
     const params = this.createDefaultParams(layerTypeDef);
-    
     try {
       const layer = await this.networkModel.addLayer(layerType, params, x, y);
       if (!layer) throw new Error('Failed to create layer');
@@ -26,7 +26,6 @@ class LayerManager {
           bubbles: true 
         }));
       };
-
       const nodeElement = this.layerFactory.createNodeElement(
         layer.id,
         layerType,
@@ -34,7 +33,9 @@ class LayerManager {
         y,
         clickHandler,
         layerTypeDef,
-        scale
+        scale,
+        this.parent.panX,
+        this.parent.panY
       );
       
       this.canvas.appendChild(nodeElement);

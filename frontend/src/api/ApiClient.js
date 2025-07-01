@@ -1,15 +1,27 @@
 import { API_URL } from '../config.js';
 
+
+let authToken = localStorage.getItem('authToken') || null;
+
+function setAuthToken(token) {
+  authToken = token;
+  localStorage.setItem('authToken', token);
+}
+
+function getAuthHeader() {
+  return authToken ? { Authorization: `Bearer ${authToken}` } : {};
+}
 class ApiClient {
 
+
+  
   async fetchApi(endpoint, options = {}) {
-    try {
-      // console.log(`Fetching: ${API_URL}/${endpoint}`);
-      
+    try {      
       const response = await fetch(`${API_URL}/${endpoint}`, {
         ...options,
         headers: {
           'Content-Type': 'application/json',
+          ...getAuthHeader(),
           ...options.headers
         },
         mode: 'cors'
@@ -33,6 +45,19 @@ class ApiClient {
       body: JSON.stringify({})
     });
     return result.id;
+  }
+  
+  async login(username, password) {
+    const response = await this.fetchApi('login', {
+      method: 'POST',
+      body: JSON.stringify({ username, password }),
+    });
+  
+    if (response.access_token) {
+      setAuthToken(response.access_token);
+    }
+  
+    return response;
   }
 
   async getLayerTypes() {

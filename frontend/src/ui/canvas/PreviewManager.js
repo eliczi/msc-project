@@ -8,7 +8,7 @@ class PreviewManager {
     window.previewManager = this;
   }
   
-  // ===== Preview Element Methods =====
+  
   
   updatePreviewElement(x, y, type) {
     const layerTypeDef = NetworkModel.getLayerType(`${type}`);
@@ -24,7 +24,7 @@ class PreviewManager {
     }
     const previewX = (x * this.parent.scale) - previewOffsetX;
     const previewY = (y * this.parent.scale) - previewOffsetY;
-    // console.log(this.parent.scale)
+    
     if (this.previewElement) {
       this.updateExistingPreview(previewX, previewY, previewSize.width, this.parent.scale);
     } else {

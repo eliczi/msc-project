@@ -2,8 +2,6 @@ class SelectionManager {
   constructor(canvas, utils) {
     this.canvas = canvas;
     this.utils = utils;
-    
-    // Selection state
     this.isSelecting = false;
     this.selectionStart = { x: 0, y: 0 };
     this.selectionEnd = { x: 0, y: 0 };
@@ -11,10 +9,9 @@ class SelectionManager {
     this.selectedNodeIds = new Set();
   }
   
-  // ===== Selection Methods =====
+  
   
   startSelection(position) {
-    const rect = this.canvas.getBoundingClientRect();
     this.isSelecting = true;
     this.selectionStart = position;
     this.selectionEnd = { ...position };
@@ -76,10 +73,7 @@ class SelectionManager {
   }
   
   selectNodesInArea() {
-    // Get current scale from the Canvas instance
     const scale = this.utils.getCanvasScale();
-    
-    // Calculate selection rectangle, adjusting for scale
     const selectionRect = {
       left: Math.min(this.selectionStart.x, this.selectionEnd.x),
       top: Math.min(this.selectionStart.y, this.selectionEnd.y),
@@ -89,30 +83,21 @@ class SelectionManager {
     
     const nodes = this.canvas.querySelectorAll('.layer-node');
     nodes.forEach(node => {
-      // Get the scaled node position
       const nodeCanvasRect = this.getScaledNodeRect(node, scale);
-      
       if (this.rectsIntersect(selectionRect, nodeCanvasRect)) {
         this.addNodeToSelection(node.dataset.id);
       }
     });
   }
   
-  /**
-   * Get node rectangle accounting for scaling
-   * @param {HTMLElement} node - DOM node
-   * @param {number} scale - Current canvas scale factor
-   * @returns {Object} - Node rectangle with left, top, right, bottom
-   */
+
   getScaledNodeRect(node, scale) {
     const rect = node.getBoundingClientRect();
     const canvasRect = this.canvas.getBoundingClientRect();
-    
-    // Calculate position relative to canvas
+      
     const left = rect.left - canvasRect.left;
     const top = rect.top - canvasRect.top;
     
-    // Scale back to unscaled coordinates for selection comparison
     return {
       left: left,
       top: top,

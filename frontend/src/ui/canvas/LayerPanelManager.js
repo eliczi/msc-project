@@ -1,17 +1,19 @@
-import DomUtils from '../../utils/DomUtils.js';
+import DomUtils from '../../utils/DomUtils.js'; // Assuming DomUtils.js is in this path
 
 class LayerPanelManager {
   constructor(networkModel) {
     this.networkModel = networkModel;
+    this.currentLayerNodeId = null; 
   }
-  
-  // ===== Layer Panel Methods =====
-  
+
   showLayerPanel(nodeId) {
+    this.currentLayerNodeId = nodeId;
     const layer = this.networkModel.getLayerById(nodeId);
-    if (!layer) return;
-    
-    // Get the layer definition to access enum values and parameter types
+    if (!layer) {
+      this.hideLayerPanel();
+      return;
+    }
+
     const layerDefinition = this.networkModel.getLayerType(layer.type);
     let panel = document.getElementById('layer-properties-panel');
     if (!panel) {
@@ -19,83 +21,73 @@ class LayerPanelManager {
       panel.id = 'layer-properties-panel';
       document.body.appendChild(panel);
     }
-    
-    panel.innerHTML = '';
-    
-    // Create header
+
+    panel.innerHTML = ''; // Clear previous content
+
     const header = DomUtils.createElementWithClass('div', 'panel-header');
     header.textContent = `${layer.type} Properties`;
     panel.appendChild(header);
-    
-    // Create content
+
     const content = DomUtils.createElementWithClass('div', 'panel-content');
-    
-    // Add parameters
     const params = layer.getParameters();
     
-    // Create a map of parameter names to their definitions
     const paramDefinitions = {};
     if (layerDefinition && layerDefinition.params) {
       layerDefinition.params.forEach(paramDef => {
         paramDefinitions[paramDef.name] = paramDef;
       });
-    }    
-    for (const key in params) {
-      // Get the parameter definition (if available)
-      const paramDef = paramDefinitions[key];
-      content.appendChild(this.createParameterControl(key, params[key], layer, paramDef));
     }
-    
+    for (const key in params) {
+      if (Object.prototype.hasOwnProperty.call(params, key)) {
+        const paramDef = paramDefinitions[key];
+        content.appendChild(this.createParameterControl(key, params[key], layer, paramDef));
+      }
+    }
+
     panel.appendChild(content);
-    
-    // Style and position the panel
-    this.styleLayerPanel(panel);
+    this.styleLayerPanel(panel); // Apply styles
+    panel.style.display = 'block'; // Ensure panel is visible
   }
-  
+
   createParameterControl(key, value, layer, paramDef) {
     const paramContainer = DomUtils.createElementWithClass('div', 'param-container');
-    
+
     const label = DomUtils.createElementWithClass('label', 'param-label');
     label.textContent = this.formatParamName(key);
-    label.htmlFor = `param-${key}`;
-    
-    // Choose input type based on parameter definition
+    label.htmlFor = `param-${key}-${this.currentLayerNodeId}`; // Ensure unique ID for label 'for' attribute
+
     let input;
-    
-    // If we have a parameter definition and it's an enum type
+
     if (paramDef && paramDef.type === 'enum' && paramDef.enum_values && paramDef.enum_values.length > 0) {
-      // Create a select dropdown for enum values
       input = document.createElement('select');
-      input.id = `param-${key}`;
-      
-      // Add options for each enum value
+      input.id = `param-${key}-${this.currentLayerNodeId}`; // Ensure unique ID
+
       paramDef.enum_values.forEach(enumValue => {
         const option = document.createElement('option');
         option.value = enumValue;
         option.textContent = this.formatEnumValue(enumValue);
-        
-        // Select the current value
         if (value === enumValue) {
           option.selected = true;
         }
-        
         input.appendChild(option);
       });
-      
-      // Add change listener
+
       input.addEventListener('change', (e) => {
         const newValue = e.target.value;
-        layer.updateParameter(key, newValue);
+        if (layer.getParameters()[key] !== newValue) {
+          layer.updateParameter(key, newValue);
+          // Refresh the panel to reflect changes
+          if (this.currentLayerNodeId) {
+            this.showLayerPanel(this.currentLayerNodeId);
+          }
+        }
       });
     } else {
-      // Create a regular input field for non-enum types
       input = document.createElement('input');
-      input.id = `param-${key}`;
-      // Set input type and value
+      input.id = `param-${key}-${this.currentLayerNodeId}`; // Ensure unique ID
+
       if (typeof value === 'number') {
         input.type = 'number';
-        
-        // If we have a parameter definition with min/max/step values, use them
         if (paramDef) {
           if (paramDef.min !== undefined) input.min = paramDef.min;
           if (paramDef.max !== undefined) input.max = paramDef.max;
@@ -104,38 +96,35 @@ class LayerPanelManager {
       } else {
         input.type = 'text';
       }
-      
+
       input.value = value;
-      
-      // Add change listener
+
       input.addEventListener('change', (e) => {
         const newValue = input.type === 'number' ? parseFloat(e.target.value) : e.target.value;
-
         layer.updateParameter(key, newValue);
-
+        
+        // Refresh the panel to reflect changes
+        if (this.currentLayerNodeId) {
+          this.showLayerPanel(this.currentLayerNodeId);
+        }
       });
     }
-    
-    // Add a description or help text if available in the param definition
+
+    // Append label and input in standard order
+    paramContainer.appendChild(label);
+    paramContainer.appendChild(input);
+
     if (paramDef && paramDef.description) {
       const helpText = DomUtils.createElementWithClass('div', 'param-help');
       helpText.textContent = paramDef.description;
-      paramContainer.appendChild(helpText);
+      paramContainer.appendChild(helpText); // Append help text after input
     }
-    
-    paramContainer.appendChild(label);
-    paramContainer.appendChild(input);
-    
+
     return paramContainer;
   }
-  
-  /**
-   * Formats an enum value for display in the dropdown
-   */
+
   formatEnumValue(value) {
     if (!value) return '';
-    
-    // Convert snake_case or camelCase to Title Case With Spaces
     return value
       .replace(/_/g, '')
       .replace(/([A-Z])/g, ' $1')
@@ -143,34 +132,37 @@ class LayerPanelManager {
       .replace(/\s+/g, '')
       .replace(/^./, str => str.toUpperCase());
   }
-  
+
   formatParamName(name) {
     return name
-      .replace(/([A-Z])/g, ' $1')
-      .replace(/^./, str => str.toUpperCase());
+      .replace(/([A-Z])/g, ' $1') 
+      .replace(/^./, str => str.toUpperCase()); 
   }
-  
+
   styleLayerPanel(panel) {
     Object.assign(panel.style, {
-      position: 'absolute',
-      right: '0',
-      top: '0',
+      position: 'fixed', 
+      right: '0px',
+      top: '0px',
       width: '300px',
-      height: '100%',
+      height: '100vh',
       backgroundColor: '#f5f5f5',
       boxShadow: '-2px 0 5px rgba(0,0,0,0.1)',
       zIndex: '1000',
-      overflow: 'auto',
+      overflowY: 'auto', 
+      overflowX: 'hidden', 
       padding: '15px',
-      display: 'block'
+      boxSizing: 'border-box', 
+      // display: 'block' // Visibility is handled by show/hide
     });
   }
-  
+
   hideLayerPanel() {
     const panel = document.getElementById('layer-properties-panel');
     if (panel) {
       panel.style.display = 'none';
     }
+    this.currentLayerNodeId = null; 
   }
 }
 

@@ -4,46 +4,34 @@ class CanvasUtils {
       this.panManager = panManager;
     }
     
-    // ===== Utility Methods =====
-    /**
-     * Gets the mouse position relative to the canvas element.
-     * 
-     * This function calculates coordinates relative to the canvas origin (top-left corner),
-     * with optional adjustment for zoom level. It handles mouse events and can either
-     * return raw coordinates or coordinates adjusted for the current zoom level.
-     * 
-     * @param {MouseEvent} event - The mouse event containing clientX and clientY coordinates
-     * @param {boolean} [adjustForZoom=false] - Whether to adjust coordinates for zoom level
-     *        - true: Divides coordinates by zoom scale (useful for operations on zoomed canvas)
-     *        - false: Returns raw coordinates without zoom adjustment (default)
-     * 
-     * @returns {Object} An object containing x and y coordinates relative to canvas
-     */
-    getCanvasPosition(event, adjustForZoom = false) {
+
+
+    getCanvasPosition(event, scale, panX, panY, preview) {
         const rect = this.canvas.getBoundingClientRect();
-        // Get coordinates from event
-        const clientX = event.clientX;
-        const clientY = event.clientY;
-        
-        // If we need to adjust for zoom
-        if (adjustForZoom) {
-          // Get scale from zoom indicator
-          const zoomIndicator = document.querySelector('.zoom-indicator');
-          const zoomFloat = zoomIndicator ? parseFloat(zoomIndicator.textContent) : 100;
-          const scale = zoomFloat / 100;
-          
+    
+        const screenX = event.clientX - rect.left;
+        const screenY = event.clientY - rect.top;
+        if (preview) {
           return {
-            x: (clientX - rect.left) / scale,
-            y: (clientY - rect.top) / scale
-          };
-        } else {
-          // Return raw position without zoom adjustment
-          return {
-            x: clientX - rect.left,
-            y: clientY - rect.top
+            x: screenX/scale,
+            y: screenY/scale
           };
         }
-      }
+        else{
+          const worldX = screenX  / scale - panX / scale  
+          const worldY = screenY  / scale - panY / scale; 
+          return {
+            x: worldX,
+            y: worldY
+          };
+
+        }
+       
+    }
+      
+      
+    
+    
       
     
     getNodeCanvasRect(node) {
@@ -72,9 +60,7 @@ class CanvasUtils {
         .replace(/([A-Z])/g, ' $1')
         .replace(/^./, str => str.toUpperCase());
     }
-    // Add this method to your CanvasUtils class
     getCanvasScale() {
-        // Return the current scale from the Canvas instance
         return this.canvas.scale || 1.0;
     }
   }

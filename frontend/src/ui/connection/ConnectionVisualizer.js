@@ -21,7 +21,7 @@ class ConnectionVisualizer {
     this.svgContainer = document.getElementById('connections');
     this.drawer = new ConnectionDrawer(this.svgContainer);
     this.window = new ConnectionWindow();
-    this.manager = new ConnectionManager(this.drawer, NetworkModel);
+    this.manager = new ConnectionManager(this.drawer);
   }
 
   // Public API methods that delegate to the appropriate modules
@@ -42,7 +42,6 @@ class ConnectionVisualizer {
       sourceId, targetId, 
       (sId, tId, event) => this.showConnectionWindow(sId, tId, event)
     );
-    
     this.manager.updateConnection(element, sourceId, targetId);
     return element;
   }

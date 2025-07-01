@@ -22,13 +22,13 @@ class TransformManager {
         const zoomPointX = centerX - rect.left;
         const zoomPointY = centerY - rect.top;
         
-        // Calculate world position under mouse before zoom
+        
         const worldX = (zoomPointX - this.panX) / this.scale;
         const worldY = (zoomPointY - this.panY) / this.scale;
         
         this.scale = newScale;
         
-        // Adjust pan to keep world position under mouse stable
+        
         this.panX = zoomPointX - worldX * this.scale;
         this.panY = zoomPointY - worldY * this.scale;
         
@@ -58,4 +58,4 @@ class TransformManager {
       };
     }
   }
-  export default TransformManager;
+  export default new TransformManager();

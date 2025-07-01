@@ -11,7 +11,14 @@
         <header>
             <h1>DeepSketch</h1>
         </header>
-        
+        <div id="timer" class="timer">Session Time: 00:00</div>
+
+        <div class="login-container">
+            <h1>Login</h1>
+            <input type="text" id="username" placeholder="Username" />
+            <input type="password" id="password" placeholder="Password" />
+            <button id="login-btn" class="btn">Login</button>
+        </div>
         <div class="app-container">
             <!-- Layer Type Panel -->
             <div class="sidebar">
@@ -19,6 +26,8 @@
                 <div id="layer-types-container" class="layer-types"></div>
                 
                 <div class="actions">
+                    <button id="save-btn" class="btn">Save</button>
+                    <button id="load-btn" class="btn">Load</button>
                     <button id="clear-btn" class="btn">Clear Canvas</button>
                     <button id="group-btn" class="btn">Group Layers</button>
                 </div>

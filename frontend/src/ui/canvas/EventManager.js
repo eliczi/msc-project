@@ -13,7 +13,6 @@ class EventManager {
   
     handleWheel(e) {
       e.preventDefault();
-      
       if (e.ctrlKey) {
         const zoomAmount = -e.deltaY * this.transformManager.zoomStep;
         const zoomed = this.transformManager.zoom(zoomAmount, e.clientX, e.clientY);

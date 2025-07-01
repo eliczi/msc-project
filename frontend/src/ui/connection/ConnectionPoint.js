@@ -13,14 +13,14 @@ class ConnectionPoint {
     this.setupEventListeners();
     this.defaultSize = '12px';
     this.hoverSize = '15px';
-    //drawingline
+    
     this.activeLine = null;
     this.activePath = null;
     
-    // Get the singleton instance of ConnectionVisualizer
+    
     this.visualizer = ConnectionVisualizer.getInstance();
 
-    // pre-bind event handlers to ensure the same reference is used
+    
     this.boundMouseMove = this.onMouseMove.bind(this);
     this.boundMouseUp = this.onMouseUp.bind(this);
   }
@@ -47,10 +47,10 @@ class ConnectionPoint {
   }
 
   onMouseDown(e) {
-    // Use GeometryUtils directly or through visualizer
+    
     const startCoords = GeometryUtils.calculatePointCoordinates(this, this.visualizer.svgContainer);
-    // Alternative if you prefer to keep using the visualizer's method:
-    // const startCoords = this.visualizer.drawer.calculatePointCoordinates(this);
+    
+    
     
     this.startX = startCoords.x;
     this.startY = startCoords.y;

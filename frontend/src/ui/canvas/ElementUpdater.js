@@ -32,7 +32,6 @@ class ElementUpdater {
         const originalY = parseFloat(element.dataset.originalY);
         
         const transformed = this.transformManager.worldToScreen(originalX, originalY);
-        
         element.style.transform = `scale(${this.transformManager.scale})`;
         element.style.left = `${transformed.x}px`;
         element.style.top = `${transformed.y}px`;

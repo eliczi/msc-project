@@ -1,19 +1,17 @@
 class CanvasEventHandler {
-  constructor(canvas, selectionManager, layerPanelManager, previewManager, layerManager, utils, layerPanel, groupManager, parent) {
+  constructor(canvas, selectionManager, layerPanelManager, previewManager, layerManager, canvasUtils, layerPanel, groupManager, parent) {
     this.canvas = canvas;
     this.selectionManager = selectionManager;
     this.layerPanelManager = layerPanelManager;
     this.previewManager = previewManager;
     this.layerManager = layerManager;
-    this.utils = utils;
+    this.canvasUtils = canvasUtils;
     this.layerPanel = layerPanel;
     this.groupManager = groupManager;
     this.parent = parent;
-    // Connection state
     this.isConnecting = false;
     this.sourceNodeId = null;
     
-    // Selection state tracking
     this.justFinishedSelecting = false;
   }
   
@@ -64,9 +62,8 @@ class CanvasEventHandler {
   
   handleDragOver(e) {
     e.preventDefault();
-    const position = this.utils.getCanvasPosition(e, true);
+    const position = this.canvasUtils.getCanvasPosition(e, this.parent.scale, this.parent.panX,this.parent.panY, true);
     this.previewManager.updatePreviewElement(position.x, position.y, this.layerPanel.currentDraggedLayerType);
-
     // Check if the dragged item is a function layer
     if (this.layerPanel.currentDraggedLayerType && this.layerPanel.currentDraggedLayerType.includes('Function')) {
       const elementsUnderCursor = document.elementsFromPoint(e.clientX, e.clientY);
@@ -95,38 +92,32 @@ class CanvasEventHandler {
       const nodeUnderCursor = elementsUnderCursor.find(element =>
         element.classList.contains('layer-node')
       );
+      // If a function layer is being dropped on a node
       if (nodeUnderCursor) {
-        // Get the target node's ID and position
         const nodeId = nodeUnderCursor.dataset.id;
         const nodeType = nodeUnderCursor.dataset.type;
         this.previewManager.removePreviewElement();
         
-        // Get the dimensions and position of the target node
         const targetRect = nodeUnderCursor.getBoundingClientRect();
         
-        // Calculate the position for the function layer (top right corner)
-        // Convert from client coordinates to canvas coordinates
-        const targetPos = this.utils.getCanvasPosition({
+        const targetPos = this.canvasUtils.getCanvasPosition({
           clientX: targetRect.right, 
           clientY: targetRect.top
         }, true);
-        
-        // Create the function layer at the calculated position
         const functionLayer = await this.layerManager.createLayer(
           this.layerPanel.currentDraggedLayerType, 
-          targetPos.x + 10, // Offset a bit from the corner (adjust as needed)
-          targetPos.y + 10,
+          targetPos.x+10,
+          targetPos.y+10,
           this.parent.scale
         );
         nodeUnderCursor.dataset.activation_fuction = functionLayer;
         if (functionLayer) {
-          // Link the function layer to the target node (if you need to establish a relationship)
           functionLayer.element.dataset.attachedTo = nodeId;
         }
       }
     } else {
       const layerType = e.dataTransfer.getData('text/plain');
-      const position = this.utils.getCanvasPosition(e, true);
+      const position = this.canvasUtils.getCanvasPosition(e, this.parent.scale, this.parent.panX, this.parent.panY, false);
       this.previewManager.removePreviewElement();
       const layer = await this.layerManager.createLayer(layerType, position.x, position.y, this.parent.scale);
       if (layer) {
@@ -150,20 +141,19 @@ class CanvasEventHandler {
   
   handleSelectionStart(e) {
     if (e.target === this.canvas) {
-      this.selectionManager.startSelection(this.utils.getCanvasPosition(e, false));
+      this.selectionManager.startSelection(this.canvasUtils.getCanvasPosition(e, 1, 0, 0, true));
     }
   }
   
   handleSelectionMove(e) {
     if (this.selectionManager.isSelecting) {
-      this.selectionManager.updateSelection(this.utils.getCanvasPosition(e, false));
+      this.selectionManager.updateSelection(this.canvasUtils.getCanvasPosition(e, 1, 0, 0, true));
     }
   }
   
   handleSelectionEnd(e) {
     if (this.selectionManager.isSelecting) {
-      const didSelect = this.selectionManager.endSelection(this.utils.getCanvasPosition(e, false));
-      
+      const didSelect = this.selectionManager.endSelection(this.canvasUtils.getCanvasPosition(e, 1, 0, 0, true));
       if (didSelect) {
         this.justFinishedSelecting = true;
         setTimeout(() => {
@@ -174,14 +164,12 @@ class CanvasEventHandler {
   }
   
   handleCanvasClick(e) {
-    // Handle clicks on the canvas background
     if (e.target === this.canvas && !this.selectionManager.isSelecting && !this.justFinishedSelecting) {
       this.selectionManager.clearSelection();
       this.layerPanelManager.hideLayerPanel();
       return;
     }
     
-    // Handle clicks on layer nodes
     let target = e.target;
     while (target && target !== this.canvas) {
       if (target.classList.contains('layer-node')) {

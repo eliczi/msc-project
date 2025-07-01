@@ -12,67 +12,67 @@ class SVGGenerator {
 
     static generateConvolutionalLayerSVG(width = 64, height = 64, options = {}) {
       const {
-        backgroundColor = '#FFFFFF',
+        backgroundColor = 'none',
         strokeColor = '#000000',
         strokeWidth = 5,
         borderRadius = 4,
-        // Kernel options
+        
         kernelWidth = width / 3,
         kernelHeight = height / 3,
         kernelColor = '#000000',
         kernelX = 5,
         kernelY = 5,
-        // Left side number options
+        
         displayNumber = true,
         numberValue = 3,
-        numberX = null, // Will be calculated if null
-        numberY = null, // Will be calculated if null
+        numberX = null, 
+        numberY = null, 
         numberFontSize = 12,
         numberFontFamily = 'Arial',
         numberColor = '#000000',
-        // Bottom number options
+        
         displayBottomNumber = true,
         bottomNumberValue = 3,
-        bottomNumberX = null, // Will be calculated if null
-        bottomNumberY = null, // Will be calculated if null
+        bottomNumberX = null, 
+        bottomNumberY = null, 
         bottomNumberFontSize = 12,
         bottomNumberFontFamily = 'Arial',
         bottomNumberColor = '#000000'
       } = options;
   
-      // Start the SVG
+      
       let svg = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${width} ${height}" width="${width}" height="${height}">`;
       
-      // Main rectangle (background)
+
       svg += `<rect x="0" y="0" width="${width}" height="${height}" rx="${borderRadius}" ry="${borderRadius}" 
               fill="${backgroundColor}" stroke="${strokeColor}" stroke-width="${strokeWidth}" />`;
       
-      // Draw kernel with specified dimensions
+      
       svg += `<rect x="${kernelX}" y="${kernelY}" width="${kernelWidth}" height="${kernelHeight}" 
               fill="none" stroke="${kernelColor}" stroke-width="2" class="kernel-rect"/>`;
       
-      // Calculate number positions if not explicitly provided
+      
       const calcNumberX = numberX !== null ? numberX : (kernelX + kernelWidth + 4);
       const calcNumberY = numberY !== null ? numberY : (kernelY + kernelHeight / 2 + numberFontSize / 3);
       
       const calcBottomNumberX = bottomNumberX !== null ? bottomNumberX : (kernelX + kernelWidth / 2 - bottomNumberFontSize / 3);
       const calcBottomNumberY = bottomNumberY !== null ? bottomNumberY : (kernelY + kernelHeight + 15);
       
-      // Add left side number if display is enabled
+      
       if (displayNumber) {
         svg += `<text x="${calcNumberX}" y="${calcNumberY}" 
                 font-family="${numberFontFamily}" font-size="${numberFontSize}" 
                 fill="${numberColor}" class="kernel-number">${numberValue}</text>`;
       }
       
-      // Add bottom number if display is enabled
+      
       if (displayBottomNumber) {
         svg += `<text x="${calcBottomNumberX}" y="${calcBottomNumberY}" 
                 font-family="${bottomNumberFontFamily}" font-size="${bottomNumberFontSize}" 
                 fill="${bottomNumberColor}" class="kernel-bottom-number">${bottomNumberValue}</text>`;
       }
       
-      // Close SVG
+      
       svg += '</svg>';
       
       return svg;
@@ -130,38 +130,38 @@ class SVGGenerator {
     
         if (!svgContainer) return false;
     
-        // Get the SVG element
+        
         const svgElement = svgContainer.querySelector('svg');
         if (!svgElement) return false;
     
-        // Get the kernel rectangle
+        
         let kernelRect = svgElement.querySelector('.kernel-rect');
         if (!kernelRect) {
-          // If no class was defined, try to find the second rectangle (first is the background)
+          
           const rects = svgElement.querySelectorAll('rect');
           if (rects.length >= 2) {
-            // Use the second rectangle as the kernel
+            
             kernelRect = rects[1];
           } else {
             return false;
           }
         }
     
-        // Update kernel dimensions and position if provided
+        
         if (kernelWidth !== null) kernelRect.setAttribute('width', kernelWidth);
         if (kernelHeight !== null) kernelRect.setAttribute('height', kernelHeight);
         if (kernelX !== null) kernelRect.setAttribute('x', kernelX);
         if (kernelY !== null) kernelRect.setAttribute('y', kernelY);
         if (kernelColor !== null) kernelRect.setAttribute('stroke', kernelColor);
         
-        // Update left side number if it exists
+        
         let numberText = svgElement.querySelector('.kernel-number');
         if (numberText) {
           if (numberValue !== null) numberText.textContent = numberValue;
           if (numberColor !== null) numberText.setAttribute('fill', numberColor);
           if (numberFontSize !== null) numberText.setAttribute('font-size', numberFontSize);
           
-          // Recalculate number position if kernel position changed
+          
           if (kernelX !== null || kernelY !== null) {
             const kernelW = kernelWidth || parseInt(kernelRect.getAttribute('width'));
             const kernelH = kernelHeight || parseInt(kernelRect.getAttribute('height'));
@@ -177,14 +177,14 @@ class SVGGenerator {
           }
         }
         
-        // Update bottom number if it exists
+        
         let bottomNumberText = svgElement.querySelector('.kernel-bottom-number');
         if (bottomNumberText) {
           if (bottomNumberValue !== null) bottomNumberText.textContent = bottomNumberValue;
           if (bottomNumberColor !== null) bottomNumberText.setAttribute('fill', bottomNumberColor);
           if (bottomNumberFontSize !== null) bottomNumberText.setAttribute('font-size', bottomNumberFontSize);
           
-          // Recalculate bottom number position if kernel position or dimensions changed
+          
           if (kernelX !== null || kernelY !== null || kernelWidth !== null || kernelHeight !== null) {
             const kernelW = kernelWidth || parseInt(kernelRect.getAttribute('width'));
             const kernelH = kernelHeight || parseInt(kernelRect.getAttribute('height'));
@@ -205,7 +205,7 @@ class SVGGenerator {
   
 
     static updateConvolutionalLayerSVG(width = 64, height = 64, options = {}, kernelOptions = {}, numberOptions = {}, bottomNumberOptions = {}) {
-      // Merge the original options with the new kernel, number, and bottom number options
+      
       const updatedOptions = {
         ...options,
         ...kernelOptions,
@@ -213,7 +213,7 @@ class SVGGenerator {
         ...bottomNumberOptions
       };
       
-      // Generate a new SVG with the updated options
+      
       return this.generateConvolutionalLayerSVG(width, height, updatedOptions);
     }
   
@@ -228,14 +228,14 @@ class SVGGenerator {
     static replaceKernelSVG(container, kernelOptions = {}, numberOptions = {}, bottomNumberOptions = {}) {
       if (!container) return false;
       
-      // Extract current SVG dimensions
+      
       const svgElement = container.querySelector('svg');
       if (!svgElement) return false;
       
       const width = parseInt(svgElement.getAttribute('width')) || 64;
       const height = parseInt(svgElement.getAttribute('height')) || 64;
       
-      // Get background rectangle properties
+      
       const bgRect = svgElement.querySelector('rect');
       const options = {};
       
@@ -246,7 +246,7 @@ class SVGGenerator {
         options.borderRadius = parseInt(bgRect.getAttribute('rx')) || 4;
       }
       
-      // Generate new SVG with updated kernel, left number, and bottom number
+      
       const newSVG = this.updateConvolutionalLayerSVG(
         width, 
         height, 
@@ -256,7 +256,7 @@ class SVGGenerator {
         bottomNumberOptions
       );
       
-      // Replace the SVG content
+      
       container.innerHTML = newSVG;
       
       return true;

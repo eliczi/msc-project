@@ -20,11 +20,40 @@ from layers.misc_layers.dense_layer import DenseLayer
 from layers.misc_layers.embedding_layer import EmbeddingLayer
 from layers.misc_layers.attention_layer import AttentionLayer
 from layers.misc_layers.normalization_layer import NormalizationLayer
+from layers.misc_layers.dropout_layer import DropoutLayer
+
 from layers.layer import Layer
 import inspect
 from neural_network import NeuralNetwork
 from connection import Connection
+from flask_jwt_extended import (
+    JWTManager, create_access_token,
+    jwt_required, get_jwt_identity
+)
+
+
 app = Flask(__name__)
+app.config['JWT_SECRET_KEY'] = 'e3f7a0bd67b94e5f8c3bbac435a2d1b204dab5d52db7c1fdc3f85f95f238dfab'  # use env var in production
+jwt = JWTManager(app)
+
+users = {
+    "admin": {"password": "admin123"},
+    "user1": {"password": "pass1"}
+}
+
+@app.route('/api/login', methods=['POST'])
+def login():
+    data = request.get_json()
+    username = data.get('username')
+    password = data.get('password')
+    
+    user = users.get(username)
+    if not user or user['password'] != password:
+        return jsonify({"error": "Invalid credentials"}), 401
+    
+    access_token = create_access_token(identity=username)
+    return jsonify(access_token=access_token)
+
 
 CORS(app, resources={r"/api/*": {"origins": "*"}})
 
@@ -152,7 +181,9 @@ def get_layer_types():
         get_class_info(FlatteningLayer),
         get_class_info(EmbeddingLayer),
         get_class_info(AttentionLayer),
-        get_class_info(NormalizationLayer)
+        get_class_info(NormalizationLayer),
+        get_class_info(DropoutLayer)
+
     ]
 
     return jsonify({
@@ -188,7 +219,8 @@ LAYER_TYPES : Dict[str, Type[Layer]] = {
     'FlatteningLayer': FlatteningLayer,
     'EmbeddingLayer': EmbeddingLayer,
     'AttentionLayer': AttentionLayer,
-    'NormalizationLayer': NormalizationLayer
+    'NormalizationLayer': NormalizationLayer,
+    'DropoutLayer': DropoutLayer
 }
 
 @app.route('/api/networks/<network_id>/layers', methods=['POST'])

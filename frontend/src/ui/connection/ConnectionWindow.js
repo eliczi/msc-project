@@ -1,3 +1,4 @@
+import { DraggableWindow } from './DraggableWindow.js';
 export class ConnectionWindow {
     constructor() {
       this.windowVisible = false;
@@ -97,7 +98,7 @@ export class ConnectionWindow {
       this.windowVisible = true;
       
       // Make the window draggable
-      this.draggable = new DraggableWindow(windowElement, header);
+      //this.draggable = new DraggableWindow(windowElement, header);
       
       // Handle click outside to close
       document.addEventListener('mousedown', this.handleOutsideClick);

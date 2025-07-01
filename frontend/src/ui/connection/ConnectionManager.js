@@ -1,38 +1,40 @@
 import { GeometryUtils } from "./GeometryUtils.js";
 import DomUtils from "../../utils/DomUtils.js";
-
+import NetworkModel from "../../models/NetworkModel.js";
 export class ConnectionManager {
-    constructor(drawer, networkModel) {
+    constructor(drawer) {
       this.drawer = drawer;
-      this.networkModel = networkModel;
+      this.networkModel = NetworkModel
       this.svgContainer = drawer.svgContainer;
     }
   
     findSourceAndTargetNodes(sourceId, targetId) {
-      // Handle group logic
+      
       const targetElement = document.querySelector(`.layer-node[data-id="${targetId}"]`);
       const targetGroupId = targetElement?.dataset?.groupId;
       const targetGroupElement = targetGroupId 
         ? document.querySelector(`.layer-group[data-id="${targetGroupId}"]`) 
         : null;
-    
+      
+      targetId = String(targetId);
+      sourceId = String(sourceId);
       let isTargetGroup = targetId.startsWith('group-');
       
-      // If target is a group and is expanded, return null to indicate we should update connections to all layers
+      
       if (isTargetGroup) {
         const group = document.querySelector(`.layer-group[data-id="${targetId}"]`);
         if (group && group.dataset.expanded === 'true') {
-          return null; // Signal to handle multiple layers
+          return null; 
         }
       }
       
-      // If target is in a collapsed group, redirect to the group
+      
       if (targetGroupElement && targetGroupElement.dataset.expanded === 'false') {
         targetId = targetGroupElement.dataset.id;
         isTargetGroup = true;
       }
       
-      // Handle source group logic
+      
       let isSourceGroup = sourceId.startsWith('group-');
       const sourceElement = document.querySelector(`.layer-node[data-id="${sourceId}"]`);
       const sourceGroupId = sourceElement?.dataset?.groupId;
@@ -41,13 +43,13 @@ export class ConnectionManager {
         : null;
 
       
-       // If source is in a collapsed group, redirect to the group
+       
       if (sourceGroupElement && sourceGroupElement.dataset.expanded === 'false') {
         sourceId = sourceGroupElement.dataset.id;
         isSourceGroup = true;
       }
       
-      // Check if source and target are in the same collapsed group
+      
       if (sourceGroupId && targetGroupId && sourceGroupId === targetGroupId) {
         const groupElement = document.querySelector(`.layer-group[data-id="${sourceGroupId}"]`);
         if (groupElement && groupElement.dataset.expanded === 'false') {
@@ -55,7 +57,7 @@ export class ConnectionManager {
         }
       }
 
-      // Get the actual DOM nodes
+      
       const sourceSelector = isSourceGroup 
         ? `.layer-group[data-id="${sourceId}"]` 
         : `.layer-node[data-id="${sourceId}"]`;
@@ -70,7 +72,7 @@ export class ConnectionManager {
       if (!sourceNode || !targetNode) {
         return { missingNodes: true, sourceId, targetId };
       }
-      // Get connection points
+      
       const sourcePoint = sourceNode._outputPoint;
       const targetPoint = targetNode._inputPoint;
       
@@ -82,13 +84,13 @@ export class ConnectionManager {
     }
   
     updateConnection(connectionElement, sourceId, targetId) {
-      // Check visibility first
+      
       if (!connectionElement) return;
       
       const result = this.findSourceAndTargetNodes(sourceId, targetId);
-      // Handle special cases
+      
       if (!result) {
-        // Handle case where target is an expanded group
+        
         const group = document.querySelector(`.layer-group[data-id="${targetId}"]`);
         if (group && group.dataset.expanded === 'true') {
           const layers = group.querySelectorAll('.layer-node');
@@ -109,16 +111,16 @@ export class ConnectionManager {
         return;
       }
       
-      // Ensure connection is visible
+      
       connectionElement.style.display = '';
       
-      // Calculate coordinates and update
+      
       const sourceCoords = GeometryUtils.calculatePointCoordinates(
         result.sourcePoint, this.svgContainer);
       const targetCoords = GeometryUtils.calculatePointCoordinates(
         result.targetPoint, this.svgContainer);
       
-      // Calculate and update path
+      
       const pathData = GeometryUtils.calculatePathData(
         sourceCoords.x, sourceCoords.y, targetCoords.x, targetCoords.y);
       
@@ -135,7 +137,7 @@ export class ConnectionManager {
   
     updateAllConnections() {
       if (!this.networkModel.connections || this.networkModel.connections.length === 0) {
-        return; // No connections to update
+        return; 
       }
       const currentScale = DomUtils.getScale();
       
