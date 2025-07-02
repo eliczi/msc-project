@@ -102,7 +102,7 @@ class GroupManager {
       expanded: true
     });
     this.selectionManager.clearSelection();
-    this.updateGroupConnections(groupId);
+    GroupManager.updateGroupConnections(groupId);
     
     return groupElement;
   }
@@ -408,7 +408,7 @@ class GroupManager {
           groupElement.dataset.originalY = top;
           
           
-          this.updateGroupConnections(groupElement.dataset.id);
+          GroupManager.updateGroupConnections(groupElement.dataset.id);
           }
         };
         
@@ -478,7 +478,7 @@ class GroupManager {
       outputElement.style.right = '';
       outputElement.style.top = '';
     }
-    this.updateGroupConnections(groupId);
+    GroupManager.updateGroupConnections(groupId);
   }
   
   addResizeHandles(groupElement) {
@@ -552,7 +552,7 @@ class GroupManager {
       groupElement.style.left = `${newLeft}px`;
       groupElement.style.top = `${newTop}px`;
       
-      this.updateGroupConnections();
+      GroupManager.updateGroupConnections();
     };
     
     const handleMouseUp = () => {
@@ -564,7 +564,7 @@ class GroupManager {
     document.addEventListener('mouseup', handleMouseUp);
   }
   
-  updateGroupConnections() {
+  static updateGroupConnections() {
     const visualizer = ConnectionVisualizer.getInstance();
     if (visualizer) {
       visualizer.updateAllConnections();
@@ -808,17 +808,44 @@ createConnection(sourceId, targetId, sourceNode) {
     NetworkModel.addConnection(connection);
   }
   }
-  static resize(groupId){
-    const group = document.querySelector(`.layer-group[data-id="${groupId}"]`)
-    console.log(group)
-   
-    const groupElement = group;
-    const nodes = Array.from(groupElement.querySelectorAll('.layer-node'));
-    const boundingBox = GroupManager.calculateBoundingBox(nodes);
-    groupElement.style.width = `${boundingBox.width}px`;
-    groupElement.style.height = `${boundingBox.height + 40}px`;
-  }
+  static resize(groupId, nodeElement, moveEvent, startx, starty) {
+    const groupElement = document.querySelector(`.layer-group[data-id="${groupId}"]`)   
+    
+    const initialWidth = parseInt(groupElement.style.width);
+    const initialHeight = parseInt(groupElement.style.height);
+    const initialLeft = parseInt(groupElement.style.left);
+    const initialTop = parseInt(groupElement.style.top);
 
+    moveEvent.preventDefault();
+    
+    let newWidth = initialWidth;
+    let newHeight = initialHeight;
+    let newLeft = initialLeft;
+    let newTop = initialTop;
+
+    // newWidth = Math.max(GROUP_DEFAULTS.MIN_RESIZE_WIDTH, initialWidth - dx);
+    // newHeight = Math.max(GROUP_DEFAULTS.MIN_RESIZE_HEIGHT, initialHeight - dy);
+    // newLeft = initialLeft + initialWidth - newWidth;
+    // newTop = initialTop + initialHeight - newHeight;
+    console.log(startx, starty)
+    console.log("group", initialLeft, initialTop)
+    console.log("difference", initialLeft - startx + 60)
+
+    const difference = initialLeft - startx + 60
+    if(difference > 0)
+    {
+      newWidth = Math.max(GROUP_DEFAULTS.MIN_RESIZE_WIDTH, initialWidth  + difference);
+      newLeft = initialLeft + initialWidth - newWidth;
+    }
+    groupElement.style.width = `${newWidth}px`;
+    groupElement.style.height = `${newHeight}px`;
+    groupElement.style.left = `${newLeft}px`;
+    groupElement.style.top = `${newTop}px`;
+
+    
+  }
+    
+  
   
 }
 

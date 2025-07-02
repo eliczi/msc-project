@@ -65,7 +65,7 @@ h1{
     gap: 10px;
     margin-bottom: 20px;
     flex-grow: 1;
-    overflow-y: auto;
+    
 }
 
 .layer-type {
@@ -213,8 +213,9 @@ pointer-events: none; /* Allow clicks to pass through to elements below */
     margin-bottom: 10px;
     border: 1px solid #ddd;
     border-radius: 4px;
-    overflow: hidden;
     background-color: #dce0d9;
+    overflow-y: auto;
+    max-height: 400px;
   }
   
   .category-header {
@@ -225,6 +226,7 @@ pointer-events: none; /* Allow clicks to pass through to elements below */
     justify-content: space-between;
     align-items: center;
     font-weight: bold;
+    visibility: always;
   }
   
   .category-header:hover {

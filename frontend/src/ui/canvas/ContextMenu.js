@@ -327,7 +327,7 @@ class ContextMenu {
     }
     
     resetView() {
-      this.canvas.resetView();
+      this.canvas.clearCanvas();
     }
     
     destroy() {

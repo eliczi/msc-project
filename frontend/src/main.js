@@ -6,11 +6,14 @@ class App {
   constructor() {
     this.uiManager = null;
     this.neuralNetwork = null;
+    this.sessionTimer = null;
+    this.timersEnabled = true;
+
   }
 
   async init() {
     //document.querySelector('.app-container').style.display = 'none';
-
+    
     try {
       const isApiConnected = await ApiClient.testConnection();
       if (!isApiConnected) {

@@ -149,7 +149,7 @@ class LayerFactory {
   static makeDraggable(element) {
     
     let isDragging = false;
-    let offsetX, offsetY;
+    let offsetX, offsetY, startx, starty;
     let selectedNodesInfo = [];
     const visualizer = ConnectionVisualizer.getInstance();
   
@@ -160,14 +160,14 @@ class LayerFactory {
         return;
       }
       isDragging = true;
+      startx = e.clientX;
+      starty = e.clientY;
       
       const canvas = element.closest('.drawing-area') || element.parentElement;
-      
       const canvasRect = canvas.getBoundingClientRect();
-      
+      ///
       const zoomIndicator = document.querySelector('.zoom-indicator');
       const zoomFloat = zoomIndicator ? parseFloat(zoomIndicator.textContent) : 100;
-
       const panXIndicator = document.querySelector('.panx-indicator');
       const panX = panXIndicator ? parseFloat(panXIndicator.textContent) : 100;
       const panYIndicator = document.querySelector('.pany-indicator');
@@ -175,7 +175,7 @@ class LayerFactory {
       const scale = zoomFloat / 100;
       const currentLeft = parseFloat(element.style.left) || 0;
       const currentTop = parseFloat(element.style.top) || 0;
-
+      ///
       const worldX = (e.clientX - canvasRect.left - panX) / scale;
       const worldY = (e.clientY - canvasRect.top - panY) / scale;
       
@@ -184,7 +184,7 @@ class LayerFactory {
 
       e.stopPropagation();
       const isNodeSelected = element.classList.contains('selected');
-  
+      
       if (isNodeSelected) {
         selectedNodesInfo = Array.from(document.querySelectorAll('.layer-node.selected'))
           .filter(node => node !== element)
@@ -239,9 +239,10 @@ class LayerFactory {
       
       element.dataset.originalX = left;
       element.dataset.originalY = top;
+      
       if (element.dataset.groupId){
         
-        GroupManager.resize(element.dataset.groupId)
+        GroupManager.resize(element.dataset.groupId, element, e, worldX, worldY)
       }
     
       const attachedFunctionLayers = document.querySelectorAll(`.layer-node[data-attached-to="${element.dataset.id}"]`);
